@@ -1,0 +1,28 @@
+{
+  "name": "typhonjs-core-socket",
+  "version": "0.1.0",
+  "homepage": "https://github.com/typhonjs/typhonjs-core-socket/",
+  "description": "Provides a default socket implementation supporting `WebSockets` and `sock.js`.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/typhonjs/typhonjs-core-socket/typhonjs-core-socket.git"
+  },
+  "jspm": {
+    "main": false,
+    "dependencies": {
+      "typhonjs-backbone-common": "github:typhonjs/typhonjs-core-backbone-common@master"
+    },
+    "devDependencies": {
+      "babel": "npm:babel-core@^5.8.25",
+      "babel-runtime": "npm:babel-runtime@^5.8.25",
+      "core-js": "npm:core-js@^1.2.1"
+    }
+  },
+  "devDependencies": {
+    "gulp": "^3.9.0",
+    "jspm": "^0.16.15",
+    "typhonjs-config-eslint": "^0.2.1",
+    "typhonjs-core-gulptasks": "^0.3.0"
+  }
+}
