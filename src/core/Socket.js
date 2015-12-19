@@ -16,24 +16,44 @@ export default class Socket extends TyphonEvents
    /**
     * Creates the socket.
     *
-    * @param {function} SocketConstructor - The socket constructor.
-    * @param {string}   endpoint - Endpoint to connect.
+    * @param {object}   options - The options hash generated from `setSocketOptions` defining the socket configuration.
     */
-   constructor(SocketConstructor, endpoint)
+   constructor(options = {})
    {
       super();
+
+      if (typeof options !== 'object')
+      {
+         throw new Error('ctor - `options` is not an object / hash.');
+      }
+
+      if (typeof options.SocketConstructor !== 'function')
+      {
+         throw new Error('ctor - `options.SocketConstructor` is missing or not a constructor function.');
+      }
+
+      if (typeof options.endpoint !== 'string')
+      {
+         throw new Error('ctor - `options.endpoint` is missing or not a string.');
+      }
 
       /**
        * The socket constructor.
        * @type {Function}
        */
-      this.SocketConstructor = SocketConstructor;
+      this.SocketConstructor = options.SocketConstructor;
 
       /**
        * Endpoint to connect.
        * @type {string}
        */
-      this.endpoint = endpoint;
+      this.endpoint = options.endpoint;
+
+      /**
+       * Defines the JSON compatible serializer or defaults to JSON.
+       * @type {Object}
+       */
+      this.serializer = options.serializer || JSON;
    }
 
    /**
@@ -57,7 +77,7 @@ export default class Socket extends TyphonEvents
       {
          let object;
 
-         try { object = JSON.parse(message.data); }
+         try { object = this.serializer.parse(message.data); }
          catch(ignore) { return; /* ignore */ }
 
          // If there is an attached socket intercept function then invoke it.
@@ -84,7 +104,7 @@ export default class Socket extends TyphonEvents
     */
    send(object)
    {
-      const message = JSON.stringify(object);
+      const message = this.serializer.stringify(object);
 
       // If there is an attached socket intercept function then invoke it.
       if (this._socketInterceptFunction)
