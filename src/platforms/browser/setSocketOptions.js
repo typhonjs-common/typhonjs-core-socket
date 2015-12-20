@@ -11,6 +11,12 @@
 export default function setSocketOptions(params, host, ssl = false, serializer = JSON, websocketPath = 'websocket',
  sockjsPath = 'sockjs')
 {
+   if (typeof serializer !== 'object' || typeof serializer.stringify !== 'function' ||
+    typeof serializer.parse !== 'function')
+   {
+      throw new TypeError('setSocketOptions - `serializer` does not conform to the JSON API.');
+   }
+
    // If SockJS is available, use it, otherwise, use WebSocket. Note: SockJS is required for IE9 support
    if (typeof SockJS === 'function')
    {
