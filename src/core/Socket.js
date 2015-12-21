@@ -127,6 +127,18 @@ export default class Socket extends TyphonEvents
    }
 
    /**
+    * Disconnects / closes the socket.
+    *
+    * @returns {Socket}
+    */
+   disconnect()
+   {
+      this.rawSocket.close(...arguments);
+
+      return this;
+   }
+
+   /**
     * Sends an object over the socket.
     *
     * @param {*}  object - The object to send.
