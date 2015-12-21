@@ -76,12 +76,12 @@ export default class Socket extends TyphonEvents
     */
    connect()
    {
-      /**
-       * The raw socket.
-       */
       switch(this.type)
       {
          case 'sockjs':
+            /**
+             * The raw socket.
+             */
             this.rawSocket = new this.SocketConstructor(this.endpoint);
             break;
          case 'websocket':

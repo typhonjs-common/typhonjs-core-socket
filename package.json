@@ -9,7 +9,6 @@
     "url": "https://github.com/typhonjs/typhonjs-core-socket/typhonjs-core-socket.git"
   },
   "jspm": {
-    "main": false,
     "dependencies": {
       "typhonjs-backbone-common": "github:typhonjs/typhonjs-core-backbone-common@master"
     },
