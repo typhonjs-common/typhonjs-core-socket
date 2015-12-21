@@ -1,6 +1,6 @@
 'use strict';
 
-import WebSocket from 'node-websocket';
+import WebSocket from 'websocket';
 
 /**
  * Provides a platform specific function to set socket options.
