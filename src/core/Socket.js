@@ -1,6 +1,6 @@
 'use strict';
 
-import TyphonEvents from 'typhonjs-backbone-common/src/TyphonEvents.js';
+import TyphonEvents from 'typhonjs-core-backbone-common/src/TyphonEvents.js';
 
 const s_STR_EVENT_CLOSE = 'socket:close';
 const s_STR_EVENT_ERROR = 'socket:error';
@@ -81,6 +81,7 @@ export default class Socket extends TyphonEvents
          case 'sockjs':
             /**
              * The raw socket.
+             * @type {Object}
              */
             this.rawSocket = new this.SocketConstructor(this.endpoint);
             break;

@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Provides a platform specific function to set socket options.
  *

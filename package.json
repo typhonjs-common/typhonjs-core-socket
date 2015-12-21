@@ -10,7 +10,7 @@
   },
   "jspm": {
     "dependencies": {
-      "typhonjs-backbone-common": "github:typhonjs/typhonjs-core-backbone-common@master"
+      "typhonjs-core-backbone-common": "github:typhonjs/typhonjs-core-backbone-common@master"
     },
     "devDependencies": {
       "babel": "npm:babel-core@^5.8.25",

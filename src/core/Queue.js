@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Provides a single consumer queue.
  */
