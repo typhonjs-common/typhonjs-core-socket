@@ -50,10 +50,22 @@ export default class Socket extends TyphonEvents
       this.endpoint = options.endpoint;
 
       /**
+       * Protocol to connect.
+       * @type {string}
+       */
+      this.protocol = options.protocol || undefined;
+
+      /**
        * Defines the JSON compatible serializer or defaults to JSON.
        * @type {Object}
        */
       this.serializer = options.serializer || JSON;
+
+      /**
+       * Defines the type of socket connection ('websocket' or 'sockjs')
+       * @type {string}
+       */
+      this.type = options.type || 'unknown';
    }
 
    /**
@@ -67,7 +79,25 @@ export default class Socket extends TyphonEvents
       /**
        * The raw socket.
        */
-      this.rawSocket = new this.SocketConstructor(this.endpoint);
+      switch(this.type)
+      {
+         case 'sockjs':
+            this.rawSocket = new this.SocketConstructor(this.endpoint);
+            break;
+         case 'websocket':
+            if (typeof this.protocol !== 'undefined')
+            {
+               this.rawSocket = new this.SocketConstructor(this.endpoint, this.protocol);
+            }
+            else
+            {
+               this.rawSocket = new this.SocketConstructor(this.endpoint);
+            }
+            break;
+         default:
+            throw new Error('connect - unknown `type`: ' +this.type);
+            break;
+      }
 
       this.rawSocket.onclose = () => { super.triggerDefer(s_STR_EVENT_CLOSE); };
 

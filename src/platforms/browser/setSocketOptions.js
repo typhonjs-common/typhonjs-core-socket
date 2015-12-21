@@ -21,11 +21,10 @@ export default function setSocketOptions(params, host, ssl = false, serializer =
    if (typeof SockJS === 'function')
    {
       /* eslint-disable no-undef */
-      params.endpoint = `${ssl ? 'https://' : 'http://'}${host}/${sockjsPath}`;
-
       params.socketOptions =
       {
-         endpoint: params.endpoint,
+         type: 'sockjs',
+         endpoint: `${ssl ? 'https://' : 'http://'}${host}/${sockjsPath}`,
          SocketConstructor: SockJS,
          serializer
       };
@@ -33,15 +32,12 @@ export default function setSocketOptions(params, host, ssl = false, serializer =
    }
    else
    {
-      params.endpoint = `${ssl ? 'wss://' : 'ws://'}${host}/${websocketPath}`;
-
       params.socketOptions =
       {
-         endpoint: params.endpoint,
+         type: 'websocket',
+         endpoint: `${ssl ? 'wss://' : 'ws://'}${host}/${websocketPath}`,
          SocketConstructor: WebSocket,
          serializer
       };
    }
-
-   Object.freeze(params.socketOptions);
 }
