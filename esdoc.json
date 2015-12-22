@@ -2,6 +2,6 @@
    "title": "typhonjs-core-socket",
    "source": "src",
    "destination": "docs",
-   "excludes": ["^(?:(?!\\.js$).)*$"],
-   "plugins": [ { "name": "esdoc-plugin-jspm" } ]
+   "plugins": [ { "name": "esdoc-plugin-jspm" } ],
+   "manual": { "changelog": ["./CHANGELOG.md"] }
 }
