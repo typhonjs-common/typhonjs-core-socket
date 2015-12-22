@@ -9,9 +9,8 @@
     "url": "https://github.com/typhonjs/typhonjs-core-socket/typhonjs-core-socket.git"
   },
   "jspm": {
-    "main": false,
     "dependencies": {
-      "typhonjs-core-backbone-common": "github:typhonjs/typhonjs-core-backbone-common@master"
+      "typhonjs-core-backbone-events": "github:typhonjs/typhonjs-core-backbone-events@master"
     },
     "devDependencies": {
       "babel": "npm:babel-core@^5.8.25",
@@ -21,7 +20,7 @@
   },
   "devDependencies": {
     "gulp": "^3.9.0",
-    "jspm": "^0.16.15",
+    "jspm": "^0.16.19",
     "typhonjs-config-eslint": "^0.2.1",
     "typhonjs-core-gulptasks": "^0.3.0"
   }

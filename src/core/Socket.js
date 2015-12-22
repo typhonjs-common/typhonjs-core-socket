@@ -1,6 +1,6 @@
 'use strict';
 
-import TyphonEvents from 'typhonjs-core-backbone-common/src/TyphonEvents.js';
+import TyphonEvents from 'typhonjs-core-backbone-events/src/TyphonEvents.js';
 
 const s_STR_EVENT_CLOSE = 'socket:close';
 const s_STR_EVENT_ERROR = 'socket:error';
@@ -96,8 +96,7 @@ export default class Socket extends TyphonEvents
             }
             break;
          default:
-            throw new Error('connect - unknown `type`: ' +this.type);
-            break;
+            throw new Error(`connect - unknown 'type': ${this.type}`);
       }
 
       this.rawSocket.onclose = () => { super.triggerDefer(s_STR_EVENT_CLOSE); };

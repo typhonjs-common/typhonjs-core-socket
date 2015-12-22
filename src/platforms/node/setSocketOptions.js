@@ -3,12 +3,15 @@
 import WebSocket from 'websocket';
 
 /**
+ * TODO: Presently this is an unfinished implementation pending better JSPM support for NPM modules for Node consumption.
+ *
  * Provides a platform specific function to set socket options.
  *
  * @param {string}   host - host name / port.
  * @param {boolean}  ssl - Indicates if an SSL connection is requested.
  * @param {object}   serializer - An instance of an object which conforms to JSON for serialization; default (JSON).
  * @param {string}   websocketPath - Defines the websocket path; default is `websocket`.
+ * @return {object}
  */
 export default function setSocketOptions(host, ssl = false, serializer = JSON, websocketPath = 'websocket')
 {
@@ -32,6 +35,6 @@ export default function setSocketOptions(host, ssl = false, serializer = JSON, w
       type: 'websocket',
       endpoint: `${ssl ? 'wss://' : 'ws://'}${host}/${websocketPath}`,
       SocketConstructor: WebSocket.client,
-      serializer: serializer
+      serializer
    };
 }

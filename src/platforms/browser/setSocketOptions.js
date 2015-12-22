@@ -8,6 +8,7 @@
  * @param {object}   serializer - An instance of an object which conforms to JSON for serialization; default (JSON).
  * @param {string}   websocketPath - Defines the websocket path; default is `websocket`.
  * @param {string}   sockjsPath - Defines the sockjs path; default is `sockjs`.
+ * @return {object}
  */
 export default function setSocketOptions(host, ssl = false, serializer = JSON, websocketPath = 'websocket',
  sockjsPath = 'sockjs')
