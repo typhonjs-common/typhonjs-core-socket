@@ -111,9 +111,9 @@ export default class Socket extends TyphonEvents
          catch(ignore) { return; /* ignore */ }
 
          // If there is an attached socket intercept function then invoke it.
-         if (this._socketInterceptFunction)
+         if (this._socketIntercept)
          {
-            this._socketInterceptFunction(s_STR_EVENT_MESSAGE_IN, message.data, object);
+            this._socketIntercept(s_STR_EVENT_MESSAGE_IN, message.data, object);
          }
 
          // Outside the try-catch block as it must only catch JSON parsing
@@ -139,6 +139,16 @@ export default class Socket extends TyphonEvents
    }
 
    /**
+    * Returns any associated socket intercept function.
+    *
+    * @returns {function}
+    */
+   getSocketIntercept()
+   {
+      return this._socketIntercept;
+   }
+
+   /**
     * Sends an object over the socket.
     *
     * @param {*}  object - The object to send.
@@ -149,13 +159,28 @@ export default class Socket extends TyphonEvents
       const message = this.serializer.stringify(object);
 
       // If there is an attached socket intercept function then invoke it.
-      if (this._socketInterceptFunction)
+      if (this._socketIntercept)
       {
-         this._socketInterceptFunction(s_STR_EVENT_MESSAGE_OUT, message, object);
+         this._socketIntercept(s_STR_EVENT_MESSAGE_OUT, message, object);
       }
 
       this.rawSocket.send(message);
 
       return this;
+   }
+
+   /**
+    * Sets the socket intercept function which is invoked when a message is sent or received.
+    *
+    * @param {function} interceptFunction - function that is invoked when a message is sent or received.
+    */
+   setSocketIntercept(interceptFunction)
+   {
+      if (typeof interceptFunction !== 'function')
+      {
+         throw new TypeError(`'interceptFunction' is not a 'function'.`);
+      }
+
+      this._socketIntercept = interceptFunction;
    }
 }
