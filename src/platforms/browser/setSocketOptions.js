@@ -70,6 +70,8 @@ export default function setSocketOptions(params = {})
 
       /* eslint-disable no-undef */
       socketOptions.type = 'sockjs';
+      socketOptions.host = params.host;
+      socketOptions.ssl = params.ssl;
       socketOptions.endpoint = `${ssl ? 'https://' : 'http://'}${params.host}/${params.sockjsPath}`;
       socketOptions.SocketConstructor = SockJS;
       socketOptions.serializer = serializer;
@@ -88,6 +90,8 @@ export default function setSocketOptions(params = {})
       }
 
       socketOptions.type = 'websocket';
+      socketOptions.host = params.host;
+      socketOptions.ssl = params.ssl;
       socketOptions.endpoint = `${params.ssl ? 'wss://' : 'ws://'}${params.host}/${params.websocketPath}`;
       socketOptions.SocketConstructor = WebSocket;
       socketOptions.serializer = params.serializer;

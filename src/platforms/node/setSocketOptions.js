@@ -68,6 +68,8 @@ export default function setSocketOptions(params = {})
    const socketOptions = {};
 
    socketOptions.type = 'websocket';
+   socketOptions.host = params.host;
+   socketOptions.ssl = params.ssl;
    socketOptions.endpoint = `${params.ssl ? 'wss://' : 'ws://'}${params.host}/${params.websocketPath}`;
    socketOptions.SocketConstructor = WebSocket;
    socketOptions.serializer = params.serializer;
