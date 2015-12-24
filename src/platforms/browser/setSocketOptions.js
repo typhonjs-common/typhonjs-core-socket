@@ -3,30 +3,57 @@
 /**
  * Provides a platform specific function to set socket options.
  *
- * @param {string}   host - host name / port.
- * @param {boolean}  ssl - Indicates if an SSL connection is requested.
- * @param {object}   serializer - An instance of an object which conforms to JSON for serialization; default (JSON).
- * @param {string}   websocketPath - Defines the websocket path; default is `websocket`.
- * @param {string}   sockjsPath - Defines the sockjs path; default is `sockjs`.
+ * @param {object}   params - Defines an object hash of required and optional parameters including the following:
+ * {string}   host - host name / port.
+ * {boolean}  ssl - (optional) Indicates if an SSL connection is requested; default (false).
+ * {object}   serializer - (optional) An instance of an object which conforms to JSON for serialization; default (JSON).
+ * {boolean}  autoConnect - (optional) Indicates if socket should connect on construction; default (true).
+ * {boolean}  autoReconnect - (optional) Indicates if socket should reconnect on socket closed; default (true).
+ * {integer}  reconnectInterval - (optional) Indicates socket reconnect inteveral; default (10000) milliseconds.
+ * {string}   protocol - (optional) Defines the websocket protocol; default (undefined).
+ * {string}   websocketPath - (optional) Defines the websocket path; default (`websocket`).
+ * {string}   sockjsPath - (optional) Defines the sockjs path; default (`sockjs`).
  * @return {object}
  */
-export default function setSocketOptions(host, ssl = false, serializer = JSON, websocketPath = 'websocket',
- sockjsPath = 'sockjs')
+export default function setSocketOptions(params = {})
 {
-   if (typeof host !== 'string')
+   if (typeof params.host !== 'string')
    {
-      throw new TypeError('setSocketOptions = `host` is not a string.');
+      throw new TypeError('setSocketOptions = `params.host` is not a string.');
    }
 
-   if (typeof ssl !== 'boolean')
+   params.ssl = params.ssl || false;
+
+   if (typeof params.ssl !== 'boolean')
    {
-      throw new TypeError('setSocketOptions = `ssl` is not a boolean.');
+      throw new TypeError('setSocketOptions = `params.ssl` is not a boolean.');
    }
 
-   if (typeof serializer !== 'object' || typeof serializer.stringify !== 'function' ||
-    typeof serializer.parse !== 'function')
+   params.serializer = params.serializer || JSON;
+
+   if (typeof params.serializer !== 'object' || typeof params.serializer.stringify !== 'function' ||
+    typeof params.serializer.parse !== 'function')
    {
       throw new TypeError('setSocketOptions - `serializer` does not conform to the JSON API.');
+   }
+
+   params.autoConnect = params.autoConnect || true;
+   params.autoReconnect = params.autoReconnect || true;
+   params.reconnectInterval = params.reconnectInterval || 10000;
+
+   if (typeof params.autoConnect !== 'boolean')
+   {
+      throw new TypeError('setSocketOptions = `params.autoConnect` is not a boolean.');
+   }
+
+   if (typeof params.autoReconnect !== 'boolean')
+   {
+      throw new TypeError('setSocketOptions = `params.autoReconnect` is not a boolean.');
+   }
+
+   if (!Number.isInteger(params.reconnectInterval))
+   {
+      throw new TypeError('setSocketOptions = `params.reconnectInterval` is not an integer.');
    }
 
    const socketOptions = {};
@@ -34,19 +61,45 @@ export default function setSocketOptions(host, ssl = false, serializer = JSON, w
    // If SockJS is available, use it, otherwise, use WebSocket. Note: SockJS is required for IE9 support
    if (typeof SockJS === 'function')
    {
+      params.sockjsPath = params.sockjsPath || 'sockjs';
+
+      if (typeof params.sockjsPath !== 'string')
+      {
+         throw new TypeError('setSocketOptions = `params.sockjsPath` is not a string.');
+      }
+
       /* eslint-disable no-undef */
       socketOptions.type = 'sockjs';
-      socketOptions.endpoint = `${ssl ? 'https://' : 'http://'}${host}/${sockjsPath}`;
+      socketOptions.endpoint = `${ssl ? 'https://' : 'http://'}${params.host}/${params.sockjsPath}`;
       socketOptions.SocketConstructor = SockJS;
       socketOptions.serializer = serializer;
+      socketOptions.autoConnect = params.autoConnect;
+      socketOptions.autoReconnect = params.autoReconnect;
+      socketOptions.reconnectInterval = params.reconnectInterval;
       /* eslint-enable no-undef */
    }
    else
    {
+      params.websocketPath = params.websocketPath || 'websocket';
+
+      if (typeof params.websocketPath !== 'string')
+      {
+         throw new TypeError('setSocketOptions = `params.websocketPath` is not a string.');
+      }
+
       socketOptions.type = 'websocket';
-      socketOptions.endpoint = `${ssl ? 'wss://' : 'ws://'}${host}/${websocketPath}`;
+      socketOptions.endpoint = `${params.ssl ? 'wss://' : 'ws://'}${params.host}/${params.websocketPath}`;
       socketOptions.SocketConstructor = WebSocket;
-      socketOptions.serializer = serializer;
+      socketOptions.serializer = params.serializer;
+      socketOptions.autoConnect = params.autoConnect;
+      socketOptions.autoReconnect = params.autoReconnect;
+      socketOptions.reconnectInterval = params.reconnectInterval;
+
+      // Optionally set params.protocol if it exists.
+      if (typeof params.protocol === 'string')
+      {
+         socketOptions.protocol = params.protocol;
+      }
    }
 
    return socketOptions;
