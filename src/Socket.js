@@ -1,6 +1,8 @@
 'use strict';
 
-import TyphonEvents from 'typhonjs-core-backbone-events/src/TyphonEvents.js';
+import TyphonEvents           from 'typhonjs-core-backbone-events/src/TyphonEvents.js';
+
+import validateSocketOptions  from './validateSocketOptions.js';
 
 const s_STR_EVENT_CLOSE = 'socket:close';
 const s_STR_EVENT_ERROR = 'socket:error';
@@ -16,56 +18,21 @@ export default class Socket extends TyphonEvents
    /**
     * Creates the socket.
     *
-    * @param {object}   options - The options hash generated from `setSocketOptions` defining the socket configuration.
+    * @param {object}   socketOptions - The options hash generated from `setSocketOptions` defining the socket
+    *                                   configuration.
     */
-   constructor(options = {})
+   constructor(socketOptions = {})
    {
       super();
 
-      if (typeof options !== 'object')
+      if (validateSocketOptions(socketOptions))
       {
-         throw new Error('ctor - `options` is not an object / hash.');
+         /**
+          * The socket constructor.
+          * @type {Function}
+          */
+         this._params = socketOptions;
       }
-
-      if (typeof options.SocketConstructor !== 'function')
-      {
-         throw new Error('ctor - `options.SocketConstructor` is missing or not a constructor function.');
-      }
-
-      if (typeof options.endpoint !== 'string')
-      {
-         throw new Error('ctor - `options.endpoint` is missing or not a string.');
-      }
-
-      /**
-       * The socket constructor.
-       * @type {Function}
-       */
-      this.SocketConstructor = options.SocketConstructor;
-
-      /**
-       * Endpoint to connect.
-       * @type {string}
-       */
-      this.endpoint = options.endpoint;
-
-      /**
-       * Protocol to connect.
-       * @type {string}
-       */
-      this.protocol = options.protocol || undefined;
-
-      /**
-       * Defines the JSON compatible serializer or defaults to JSON.
-       * @type {Object}
-       */
-      this.serializer = options.serializer || JSON;
-
-      /**
-       * Defines the type of socket connection ('websocket' or 'sockjs')
-       * @type {string}
-       */
-      this.type = options.type || 'unknown';
    }
 
    /**
@@ -76,27 +43,27 @@ export default class Socket extends TyphonEvents
     */
    connect()
    {
-      switch(this.type)
+      switch(this._params.type)
       {
          case 'sockjs':
             /**
              * The raw socket.
              * @type {Object}
              */
-            this.rawSocket = new this.SocketConstructor(this.endpoint);
+            this.rawSocket = new this._params.SocketConstructor(this._params.endpoint);
             break;
          case 'websocket':
-            if (typeof this.protocol !== 'undefined')
+            if (typeof this._params.protocol !== 'undefined')
             {
-               this.rawSocket = new this.SocketConstructor(this.endpoint, this.protocol);
+               this.rawSocket = new this._params.SocketConstructor(this._params.endpoint, this._params.protocol);
             }
             else
             {
-               this.rawSocket = new this.SocketConstructor(this.endpoint);
+               this.rawSocket = new this._params.SocketConstructor(this._params.endpoint);
             }
             break;
          default:
-            throw new Error(`connect - unknown 'type': ${this.type}`);
+            throw new Error(`connect - unknown 'type': ${this._params.type}`);
       }
 
       this.rawSocket.onclose = () => { super.triggerDefer(s_STR_EVENT_CLOSE); };
@@ -107,7 +74,7 @@ export default class Socket extends TyphonEvents
       {
          let object;
 
-         try { object = this.serializer.parse(message.data); }
+         try { object = this._params.serializer.parse(message.data); }
          catch(ignore) { return; /* ignore */ }
 
          // If there is an attached socket intercept function then invoke it.
@@ -156,7 +123,7 @@ export default class Socket extends TyphonEvents
     */
    send(object)
    {
-      const message = this.serializer.stringify(object);
+      const message = this._params.serializer.stringify(object);
 
       // If there is an attached socket intercept function then invoke it.
       if (this._socketIntercept)
