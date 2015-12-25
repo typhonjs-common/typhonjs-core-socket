@@ -34,6 +34,8 @@ export default class Socket extends TyphonEvents
          this._params = socketOptions;
       }
 
+      this.connect.bind(this);
+
       // Schedule auto connection
       if (this._params.autoConnect)
       {
