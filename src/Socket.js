@@ -28,10 +28,16 @@ export default class Socket extends TyphonEvents
       if (validateSocketOptions(socketOptions))
       {
          /**
-          * The socket constructor.
-          * @type {Function}
+          * The socket options parameters.
+          * @type {object}
           */
          this._params = socketOptions;
+      }
+
+      // Schedule auto connection
+      if (this._params.autoConnect)
+      {
+         setTimeout(this.connect, 0);
       }
    }
 
@@ -66,7 +72,16 @@ export default class Socket extends TyphonEvents
             throw new Error(`connect - unknown 'type': ${this._params.type}`);
       }
 
-      this.rawSocket.onclose = () => { super.triggerDefer(s_STR_EVENT_CLOSE); };
+      this.rawSocket.onclose = () =>
+      {
+         super.triggerDefer(s_STR_EVENT_CLOSE);
+
+         if (this._params.autoReconnect)
+         {
+            // Schedule a reconnection
+            setTimeout(this.connect, this._params.reconnectInterval);
+         }
+      };
 
       this.rawSocket.onerror = (error) => { super.triggerDefer(s_STR_EVENT_ERROR, error); };
 

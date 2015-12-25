@@ -43,9 +43,9 @@ export default function validateSocketOptions(params = {})
       throw new TypeError('validateSocketOptions - `params.autoReconnect` is not a boolean.');
    }
 
-   if (!Number.isInteger(params.reconnectInterval))
+   if (!Number.isInteger(params.reconnectInterval) && params.reconnectInterval >= 0)
    {
-      throw new TypeError('validateSocketOptions - `params.reconnectInterval` is not an integer.');
+      throw new TypeError('validateSocketOptions - `params.reconnectInterval` is not an integer or >= 0.');
    }
 
    if (typeof params.SocketConstructor !== 'function')
