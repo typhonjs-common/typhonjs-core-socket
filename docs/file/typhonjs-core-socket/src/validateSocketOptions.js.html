@@ -2,8 +2,8 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <base data-ice="baseUrl" href="../../../../../">
-  <title data-ice="title">typhonjs-core-socket/src/platforms/node/setSocketOptions.js | typhonjs-core-socket API Document</title>
+  <base data-ice="baseUrl" href="../../../">
+  <title data-ice="title">typhonjs-core-socket/src/validateSocketOptions.js | typhonjs-core-socket API Document</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
@@ -43,94 +43,92 @@
 </div>
 </nav>
 
-<div class="content" data-ice="content"><h1 data-ice="title">typhonjs-core-socket/src/platforms/node/setSocketOptions.js</h1>
+<div class="content" data-ice="content"><h1 data-ice="title">typhonjs-core-socket/src/validateSocketOptions.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">&apos;use strict&apos;;
 
-import WebSocket from &apos;websocket&apos;;
-
 /**
- * TODO: Presently this is an unfinished implementation pending better JSPM support for NPM modules for Node consumption.
+ * Provides a validation function to verify socket options.
  *
  * @param {object}   params - Defines an object hash of required and optional parameters including the following:
+ * (string)   type - Type of socket connection; either &apos;sockjs&apos; or &apos;websocket&apos;.
  * (string)   host - host name / port.
- * (boolean)  ssl - (optional) Indicates if an SSL connection is requested; default (false).
- * (object)   serializer - (optional) An instance of an object which conforms to JSON for serialization; default (JSON).
- * (boolean)  autoConnect - (optional) Indicates if socket should connect on construction; default (true).
- * (boolean)  autoReconnect - (optional) Indicates if socket should reconnect on socket closed; default (true).
- * (integer)  reconnectInterval - (optional) Indicates socket reconnect inteveral; default (10000) milliseconds.
+ * (boolean)  ssl - Indicates if an SSL connection is requested; default (false).
+ * (string)   path - Defines the path of protocol; default (`websocket` or `sockjs`).
+ * (object)   serializer - An instance of an object which conforms to JSON for serialization; default (JSON).
+ * (boolean)  autoConnect - Indicates if socket should connect on construction; default (true).
+ * (boolean)  autoReconnect - Indicates if socket should reconnect on socket closed; default (true).
+ * (integer)  reconnectInterval - Indicates socket reconnect inteveral; default (10000) milliseconds.
  * (string)   protocol - (optional) Defines the websocket protocol; default (undefined).
- * (string)   websocketPath - (optional) Defines the websocket path; default (`websocket`).
- * (string)   sockjsPath - (optional) Defines the sockjs path; default (`sockjs`).
- * @return {object}
+ * @return {boolean|TypeError}
  */
-export default function setSocketOptions(params = {})
+export default function validateSocketOptions(params = {})
 {
    if (typeof params.host !== &apos;string&apos;)
    {
-      throw new TypeError(&apos;setSocketOptions = `params.host` is not a string.&apos;);
+      throw new TypeError(&apos;validateSocketOptions - `params.host` is not a string.&apos;);
    }
-
-   params.ssl = params.ssl || false;
 
    if (typeof params.ssl !== &apos;boolean&apos;)
    {
-      throw new TypeError(&apos;setSocketOptions = `params.ssl` is not a boolean.&apos;);
+      throw new TypeError(&apos;validateSocketOptions - `params.ssl` is not a boolean.&apos;);
    }
-
-   params.serializer = params.serializer || JSON;
 
    if (typeof params.serializer !== &apos;object&apos; || typeof params.serializer.stringify !== &apos;function&apos; ||
     typeof params.serializer.parse !== &apos;function&apos;)
    {
-      throw new TypeError(&apos;setSocketOptions - `serializer` does not conform to the JSON API.&apos;);
+      throw new TypeError(&apos;validateSocketOptions - `serializer` does not conform to the JSON API.&apos;);
    }
-
-   params.autoConnect = params.autoConnect || true;
-   params.autoReconnect = params.autoReconnect || true;
-   params.reconnectInterval = params.reconnectInterval || 10000;
 
    if (typeof params.autoConnect !== &apos;boolean&apos;)
    {
-      throw new TypeError(&apos;setSocketOptions = `params.autoConnect` is not a boolean.&apos;);
+      throw new TypeError(&apos;validateSocketOptions - `params.autoConnect` is not a boolean.&apos;);
    }
 
    if (typeof params.autoReconnect !== &apos;boolean&apos;)
    {
-      throw new TypeError(&apos;setSocketOptions = `params.autoReconnect` is not a boolean.&apos;);
+      throw new TypeError(&apos;validateSocketOptions - `params.autoReconnect` is not a boolean.&apos;);
    }
 
-   if (!Number.isInteger(params.reconnectInterval) || params.reconnectInterval &lt; 0)
+   if (!Number.isInteger(params.reconnectInterval) &amp;&amp; params.reconnectInterval &lt; 0)
    {
-      throw new TypeError(&apos;setSocketOptions = `params.reconnectInterval` is not an integer or &lt; 0.&apos;);
+      throw new TypeError(&apos;validateSocketOptions - `params.reconnectInterval` is not an integer or &lt; 0.&apos;);
    }
 
-   params.websocketPath = params.websocketPath || &apos;websocket&apos;;
-
-   if (typeof params.websocketPath !== &apos;string&apos;)
+   if (typeof params.SocketConstructor !== &apos;function&apos;)
    {
-      throw new TypeError(&apos;setSocketOptions = `params.websocketPath` is not a string.&apos;);
+      throw new TypeError(&apos;validateSocketOptions - `params.SocketConstructor` is not an constructor function.&apos;);
    }
 
-   const socketOptions = {};
-
-   socketOptions.type = &apos;websocket&apos;;
-   socketOptions.host = params.host;
-   socketOptions.ssl = params.ssl;
-   socketOptions.path = params.websocketPath;
-   socketOptions.endpoint = `${params.ssl ? &apos;wss://&apos; : &apos;ws://&apos;}${params.host}/${params.websocketPath}`;
-   socketOptions.SocketConstructor = WebSocket;
-   socketOptions.serializer = params.serializer;
-   socketOptions.autoConnect = params.autoConnect;
-   socketOptions.autoReconnect = params.autoReconnect;
-   socketOptions.reconnectInterval = params.reconnectInterval;
-
-   // Optionally set params.protocol if it exists.
-   if (typeof params.protocol === &apos;string&apos;)
+   if (typeof params.endpoint !== &apos;string&apos;)
    {
-      socketOptions.protocol = params.protocol;
+      throw new Error(&apos;ctor - `options.endpoint` is missing or not a string.&apos;);
    }
 
-   return socketOptions;
+   if (typeof params.type !== &apos;string&apos;)
+   {
+      throw new TypeError(&apos;validateSocketOptions - `params.type` is not a string.&apos;);
+   }
+
+   if (typeof params.path !== &apos;string&apos;)
+   {
+      throw new TypeError(&apos;validateSocketOptions - `params.path` is not a string.&apos;);
+   }
+
+   switch (params.type)
+   {
+      case &apos;websocket&apos;:
+         if (params.protocol &amp;&amp; typeof params.protocol !== &apos;string&apos;)
+         {
+            throw new TypeError(&apos;validateSocketOptions - `params.protocol` is not a string.&apos;);
+         }
+         break;
+
+      default:
+         throw new TypeError(&apos;validateSocketOptions - `params.type` is not valid; must be `sockjs` or `websocket`.&apos;);
+         break;
+   }
+
+   return true;
 }</code></pre>
 
 </div>
