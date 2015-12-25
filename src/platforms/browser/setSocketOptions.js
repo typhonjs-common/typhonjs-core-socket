@@ -4,15 +4,15 @@
  * Provides a platform specific function to set socket options.
  *
  * @param {object}   params - Defines an object hash of required and optional parameters including the following:
- * {string}   host - host name / port.
- * {boolean}  ssl - (optional) Indicates if an SSL connection is requested; default (false).
- * {object}   serializer - (optional) An instance of an object which conforms to JSON for serialization; default (JSON).
- * {boolean}  autoConnect - (optional) Indicates if socket should connect on construction; default (true).
- * {boolean}  autoReconnect - (optional) Indicates if socket should reconnect on socket closed; default (true).
- * {integer}  reconnectInterval - (optional) Indicates socket reconnect inteveral; default (10000) milliseconds.
- * {string}   protocol - (optional) Defines the websocket protocol; default (undefined).
- * {string}   websocketPath - (optional) Defines the websocket path; default (`websocket`).
- * {string}   sockjsPath - (optional) Defines the sockjs path; default (`sockjs`).
+ * (string)   host - host name / port.
+ * (boolean)  ssl - (optional) Indicates if an SSL connection is requested; default (false).
+ * (object)   serializer - (optional) An instance of an object which conforms to JSON for serialization; default (JSON).
+ * (boolean)  autoConnect - (optional) Indicates if socket should connect on construction; default (true).
+ * (boolean)  autoReconnect - (optional) Indicates if socket should reconnect on socket closed; default (true).
+ * (integer)  reconnectInterval - (optional) Indicates socket reconnect inteveral; default (10000) milliseconds.
+ * (string)   protocol - (optional) Defines the websocket protocol; default (undefined).
+ * (string)   websocketPath - (optional) Defines the websocket path; default (`websocket`).
+ * (string)   sockjsPath - (optional) Defines the sockjs path; default (`sockjs`).
  * @return {object}
  */
 export default function setSocketOptions(params = {})

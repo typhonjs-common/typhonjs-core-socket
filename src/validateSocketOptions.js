@@ -4,16 +4,16 @@
  * Provides a validation function to verify socket options.
  *
  * @param {object}   params - Defines an object hash of required and optional parameters including the following:
- * {string}   host - host name / port.
- * {boolean}  ssl - (optional) Indicates if an SSL connection is requested; default (false).
- * {object}   serializer - (optional) An instance of an object which conforms to JSON for serialization; default (JSON).
- * {boolean}  autoConnect - (optional) Indicates if socket should connect on construction; default (true).
- * {boolean}  autoReconnect - (optional) Indicates if socket should reconnect on socket closed; default (true).
- * {integer}  reconnectInterval - (optional) Indicates socket reconnect inteveral; default (10000) milliseconds.
- * {string}   protocol - (optional) Defines the websocket protocol; default (undefined).
- * {string}   websocketPath - (optional) Defines the websocket path; default (`websocket`).
- * {string}   sockjsPath - (optional) Defines the sockjs path; default (`sockjs`).
- * @return {object}
+ * (string)   type - Type of socket connection; either 'sockjs' or 'websocket'.
+ * (string)   host - host name / port.
+ * (boolean)  ssl - Indicates if an SSL connection is requested; default (false).
+ * (string)   path - Defines the path of protocol; default (`websocket` or `sockjs`).
+ * (object)   serializer - An instance of an object which conforms to JSON for serialization; default (JSON).
+ * (boolean)  autoConnect - Indicates if socket should connect on construction; default (true).
+ * (boolean)  autoReconnect - Indicates if socket should reconnect on socket closed; default (true).
+ * (integer)  reconnectInterval - Indicates socket reconnect inteveral; default (10000) milliseconds.
+ * (string)   protocol - (optional) Defines the websocket protocol; default (undefined).
+ * @return {boolean|TypeError}
  */
 export default function validateSocketOptions(params = {})
 {
