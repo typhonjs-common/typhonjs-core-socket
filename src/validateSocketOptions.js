@@ -63,22 +63,14 @@ export default function validateSocketOptions(params = {})
       throw new TypeError('validateSocketOptions - `params.type` is not a string.');
    }
 
+   if (typeof params.path !== 'string')
+   {
+      throw new TypeError('validateSocketOptions - `params.path` is not a string.');
+   }
+
    switch (params.type)
    {
-      case 'sockjs':
-         if (typeof params.sockjsPath !== 'string')
-         {
-            throw new TypeError('validateSocketOptions - `params.sockjsPath` is not a string.');
-         }
-         break;
-
       case 'websocket':
-         if (typeof params.websocketPath !== 'string')
-         {
-            throw new TypeError('validateSocketOptions - `params.websocketPath` is not a string.');
-         }
-
-         // Optionally verify params.protocol if it exists.
          if (params.protocol && typeof params.protocol !== 'string')
          {
             throw new TypeError('validateSocketOptions - `params.protocol` is not a string.');
