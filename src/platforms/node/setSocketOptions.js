@@ -53,9 +53,9 @@ export default function setSocketOptions(params = {})
       throw new TypeError('setSocketOptions = `params.autoReconnect` is not a boolean.');
    }
 
-   if (!Number.isInteger(params.reconnectInterval))
+   if (!Number.isInteger(params.reconnectInterval) || params.reconnectInterval < 0)
    {
-      throw new TypeError('setSocketOptions = `params.reconnectInterval` is not an integer.');
+      throw new TypeError('setSocketOptions = `params.reconnectInterval` is not an integer or < 0.');
    }
 
    params.websocketPath = params.websocketPath || 'websocket';
