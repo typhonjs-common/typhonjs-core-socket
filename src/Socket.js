@@ -51,6 +51,7 @@ export default class Socket extends TyphonEvents
     */
    connect()
    {
+console.log("Socket - connect - this._params: " +JSON.stringify(this._params));
       switch(this._params.type)
       {
          case 'sockjs':
