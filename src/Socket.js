@@ -34,12 +34,10 @@ export default class Socket extends TyphonEvents
          this._params = socketOptions;
       }
 
-      this.connect.bind(this);
-
       // Schedule auto connection
       if (this._params.autoConnect)
       {
-         setTimeout(this.connect, 0);
+         setTimeout(this.connect.bind(this), 0);
       }
    }
 
@@ -51,7 +49,6 @@ export default class Socket extends TyphonEvents
     */
    connect()
    {
-console.log("Socket - connect - this._params: " +JSON.stringify(this._params));
       switch(this._params.type)
       {
          case 'sockjs':
@@ -82,7 +79,7 @@ console.log("Socket - connect - this._params: " +JSON.stringify(this._params));
          if (this._params.autoReconnect)
          {
             // Schedule a reconnection
-            setTimeout(this.connect, this._params.reconnectInterval);
+            setTimeout(this.connect.bind(this), this._params.reconnectInterval);
          }
       };
 
