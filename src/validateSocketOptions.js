@@ -53,7 +53,7 @@ export default function validateSocketOptions(params = {})
       throw new TypeError('validateSocketOptions - `params.SocketConstructor` is not an constructor function.');
    }
 
-   if (typeof options.endpoint !== 'string')
+   if (typeof params.endpoint !== 'string')
    {
       throw new Error('ctor - `options.endpoint` is missing or not a string.');
    }
