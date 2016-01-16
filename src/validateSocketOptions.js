@@ -79,7 +79,6 @@ export default function validateSocketOptions(params = {})
 
       default:
          throw new TypeError('validateSocketOptions - `params.type` is not valid; must be `sockjs` or `websocket`.');
-         break;
    }
 
    return true;
