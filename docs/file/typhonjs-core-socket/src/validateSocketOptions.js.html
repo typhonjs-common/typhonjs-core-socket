@@ -50,6 +50,7 @@
  * Provides a validation function to verify socket options.
  *
  * @param {object}   params - Defines an object hash of required and optional parameters including the following:
+ * ```
  * (string)   type - Type of socket connection; either &apos;sockjs&apos; or &apos;websocket&apos;.
  * (string)   host - host name / port.
  * (boolean)  ssl - Indicates if an SSL connection is requested; default (false).
@@ -57,8 +58,10 @@
  * (object)   serializer - An instance of an object which conforms to JSON for serialization; default (JSON).
  * (boolean)  autoConnect - Indicates if socket should connect on construction; default (true).
  * (boolean)  autoReconnect - Indicates if socket should reconnect on socket closed; default (true).
+ * (integer)  messageTimeout - Indicates a timeout for message responses; default (10000) milliseconds.
  * (integer)  reconnectInterval - Indicates socket reconnect inteveral; default (10000) milliseconds.
  * (string)   protocol - (optional) Defines the websocket protocol; default (undefined).
+ * ```
  * @return {boolean|TypeError}
  */
 export default function validateSocketOptions(params = {})
@@ -87,6 +90,11 @@ export default function validateSocketOptions(params = {})
    if (typeof params.autoReconnect !== &apos;boolean&apos;)
    {
       throw new TypeError(&apos;validateSocketOptions - `params.autoReconnect` is not a boolean.&apos;);
+   }
+
+   if (!Number.isInteger(params.messageTimeout) || params.messageTimeout &lt; 0)
+   {
+      throw new TypeError(&apos;validateSocketOptions = `params.messageTimeout` is not an integer or &lt; 0.&apos;);
    }
 
    if (!Number.isInteger(params.reconnectInterval) &amp;&amp; params.reconnectInterval &lt; 0)
@@ -125,7 +133,6 @@ export default function validateSocketOptions(params = {})
 
       default:
          throw new TypeError(&apos;validateSocketOptions - `params.type` is not valid; must be `sockjs` or `websocket`.&apos;);
-         break;
    }
 
    return true;
