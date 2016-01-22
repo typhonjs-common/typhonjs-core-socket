@@ -104,6 +104,7 @@ export default function setSocketOptions(params = {})
       socketOptions.autoReconnect = params.autoReconnect;
       socketOptions.messageTimeout = params.messageTimeout;
       socketOptions.reconnectInterval = params.reconnectInterval;
+      socketOptions.socketIntercept = params.socketIntercept;
       /* eslint-enable no-undef */
    }
    else
@@ -126,6 +127,7 @@ export default function setSocketOptions(params = {})
       socketOptions.autoReconnect = params.autoReconnect;
       socketOptions.messageTimeout = params.messageTimeout;
       socketOptions.reconnectInterval = params.reconnectInterval;
+      socketOptions.socketIntercept = params.socketIntercept;
 
       // Optionally set params.protocol if it exists.
       if (typeof params.protocol === 'string')
