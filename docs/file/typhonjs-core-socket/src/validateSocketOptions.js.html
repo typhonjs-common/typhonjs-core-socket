@@ -61,6 +61,9 @@
  * (integer)  messageTimeout - Indicates a timeout for message responses; default (10000) milliseconds.
  * (integer)  reconnectInterval - Indicates socket reconnect inteveral; default (10000) milliseconds.
  * (string)   protocol - (optional) Defines the websocket protocol; default (undefined).
+ * (function) socketIntercept - (optional) Provides an intercept function for in / out messages; default (undefined).
+ *                              When invoked three parameters are passed: (string) message type, (*) message data,
+ *                              (object) parsed JSON object.
  * ```
  * @return {boolean|TypeError}
  */
@@ -100,6 +103,11 @@ export default function validateSocketOptions(params = {})
    if (!Number.isInteger(params.reconnectInterval) &amp;&amp; params.reconnectInterval &lt; 0)
    {
       throw new TypeError(&apos;validateSocketOptions - `params.reconnectInterval` is not an integer or &lt; 0.&apos;);
+   }
+
+   if (typeof params.socketIntercept !== &apos;undefined&apos; &amp;&amp; typeof params.socketIntercept !== &apos;function&apos;)
+   {
+      throw new TypeError(&apos;validateSocketOptions = `params.socketIntercept` is not a function.&apos;);
    }
 
    if (typeof params.SocketConstructor !== &apos;function&apos;)
