@@ -32,6 +32,8 @@ export default class Socket extends TyphonEvents
           * @type {object}
           */
          this._params = socketOptions;
+
+         this._socketIntercept = socketOptions.socketIntercept;
       }
 
       // Potentially schedule auto connection

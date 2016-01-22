@@ -24,6 +24,9 @@ const s_DEFAULT_SSL = false;
  * (string)   protocol - (optional) Defines the websocket protocol; default (undefined).
  * (string)   websocketPath - (optional) Defines the websocket path; default (`websocket`).
  * (string)   sockjsPath - (optional) Defines the sockjs path; default (`sockjs`).
+ * (function) socketIntercept - (optional) Provides an intercept function for in / out messages; default (undefined).
+ *                              When invoked three parameters are passed: (string) message type, (*) message data,
+ *                              (object) parsed JSON object.
  * ```
  * @return {object}
  */
@@ -72,6 +75,11 @@ export default function setSocketOptions(params = {})
    if (!Number.isInteger(params.reconnectInterval) || params.reconnectInterval < 0)
    {
       throw new TypeError('setSocketOptions = `params.reconnectInterval` is not an integer or < 0.');
+   }
+
+   if (typeof params.socketIntercept !== 'undefined' && typeof params.socketIntercept !== 'function')
+   {
+      throw new TypeError('setSocketOptions = `params.socketIntercept` is not a function.');
    }
 
    params.websocketPath = params.websocketPath || 'websocket';
