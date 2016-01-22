@@ -4,6 +4,7 @@
  * Provides a validation function to verify socket options.
  *
  * @param {object}   params - Defines an object hash of required and optional parameters including the following:
+ * ```
  * (string)   type - Type of socket connection; either 'sockjs' or 'websocket'.
  * (string)   host - host name / port.
  * (boolean)  ssl - Indicates if an SSL connection is requested; default (false).
@@ -14,6 +15,7 @@
  * (integer)  messageTimeout - Indicates a timeout for message responses; default (10000) milliseconds.
  * (integer)  reconnectInterval - Indicates socket reconnect inteveral; default (10000) milliseconds.
  * (string)   protocol - (optional) Defines the websocket protocol; default (undefined).
+ * ```
  * @return {boolean|TypeError}
  */
 export default function validateSocketOptions(params = {})
