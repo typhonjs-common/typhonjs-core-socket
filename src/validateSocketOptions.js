@@ -11,6 +11,7 @@
  * (object)   serializer - An instance of an object which conforms to JSON for serialization; default (JSON).
  * (boolean)  autoConnect - Indicates if socket should connect on construction; default (true).
  * (boolean)  autoReconnect - Indicates if socket should reconnect on socket closed; default (true).
+ * (integer)  messageTimeout - Indicates a timeout for message responses; default (10000) milliseconds.
  * (integer)  reconnectInterval - Indicates socket reconnect inteveral; default (10000) milliseconds.
  * (string)   protocol - (optional) Defines the websocket protocol; default (undefined).
  * @return {boolean|TypeError}
@@ -41,6 +42,11 @@ export default function validateSocketOptions(params = {})
    if (typeof params.autoReconnect !== 'boolean')
    {
       throw new TypeError('validateSocketOptions - `params.autoReconnect` is not a boolean.');
+   }
+
+   if (!Number.isInteger(params.messageTimeout) || params.messageTimeout < 0)
+   {
+      throw new TypeError('validateSocketOptions = `params.messageTimeout` is not an integer or < 0.');
    }
 
    if (!Number.isInteger(params.reconnectInterval) && params.reconnectInterval < 0)

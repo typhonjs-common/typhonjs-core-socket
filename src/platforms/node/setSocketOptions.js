@@ -2,8 +2,15 @@
 
 import WebSocket from 'websocket';
 
+const s_DEFAULT_AUTO_CONNECT = true;
+const s_DEFAULT_AUTO_RECONNECT = true;
+const s_DEFAULT_MESSAGE_TIMEOUT = 10000;
+const s_DEFAULT_RECONNECT_INTERVAL = 10000;
+const s_DEFAULT_SERIALIZER = JSON;
+const s_DEFAULT_SSL = false;
+
 /**
- * TODO: Presently this is an unfinished implementation pending better JSPM support for NPM modules for Node consumption.
+ * Provides a platform specific (Node) function to set socket options.
  *
  * @param {object}   params - Defines an object hash of required and optional parameters including the following:
  * (string)   host - host name / port.
@@ -11,6 +18,7 @@ import WebSocket from 'websocket';
  * (object)   serializer - (optional) An instance of an object which conforms to JSON for serialization; default (JSON).
  * (boolean)  autoConnect - (optional) Indicates if socket should connect on construction; default (true).
  * (boolean)  autoReconnect - (optional) Indicates if socket should reconnect on socket closed; default (true).
+ * (integer)  messageTimeout - (optional) Indicates a timeout for message responses; default (10000) milliseconds.
  * (integer)  reconnectInterval - (optional) Indicates socket reconnect inteveral; default (10000) milliseconds.
  * (string)   protocol - (optional) Defines the websocket protocol; default (undefined).
  * (string)   websocketPath - (optional) Defines the websocket path; default (`websocket`).
@@ -24,14 +32,14 @@ export default function setSocketOptions(params = {})
       throw new TypeError('setSocketOptions = `params.host` is not a string.');
    }
 
-   params.ssl = params.ssl || false;
+   params.ssl = params.ssl || s_DEFAULT_SSL;
 
    if (typeof params.ssl !== 'boolean')
    {
       throw new TypeError('setSocketOptions = `params.ssl` is not a boolean.');
    }
 
-   params.serializer = params.serializer || JSON;
+   params.serializer = params.serializer || s_DEFAULT_SERIALIZER;
 
    if (typeof params.serializer !== 'object' || typeof params.serializer.stringify !== 'function' ||
     typeof params.serializer.parse !== 'function')
@@ -39,9 +47,10 @@ export default function setSocketOptions(params = {})
       throw new TypeError('setSocketOptions - `serializer` does not conform to the JSON API.');
    }
 
-   params.autoConnect = params.autoConnect || true;
-   params.autoReconnect = params.autoReconnect || true;
-   params.reconnectInterval = params.reconnectInterval || 10000;
+   params.autoConnect = params.autoConnect || s_DEFAULT_AUTO_CONNECT;
+   params.autoReconnect = params.autoReconnect || s_DEFAULT_AUTO_RECONNECT;
+   params.messageTimeout = params.messageTimeout || s_DEFAULT_MESSAGE_TIMEOUT;
+   params.reconnectInterval = params.reconnectInterval || s_DEFAULT_RECONNECT_INTERVAL;
 
    if (typeof params.autoConnect !== 'boolean')
    {
@@ -51,6 +60,11 @@ export default function setSocketOptions(params = {})
    if (typeof params.autoReconnect !== 'boolean')
    {
       throw new TypeError('setSocketOptions = `params.autoReconnect` is not a boolean.');
+   }
+
+   if (!Number.isInteger(params.messageTimeout) || params.messageTimeout < 0)
+   {
+      throw new TypeError('setSocketOptions = `params.messageTimeout` is not an integer or < 0.');
    }
 
    if (!Number.isInteger(params.reconnectInterval) || params.reconnectInterval < 0)
@@ -76,6 +90,7 @@ export default function setSocketOptions(params = {})
    socketOptions.serializer = params.serializer;
    socketOptions.autoConnect = params.autoConnect;
    socketOptions.autoReconnect = params.autoReconnect;
+   socketOptions.messageTimeout = params.messageTimeout;
    socketOptions.reconnectInterval = params.reconnectInterval;
 
    // Optionally set params.protocol if it exists.
