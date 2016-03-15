@@ -51,7 +51,7 @@ export default class Socket extends TyphonEvents
     */
    connect()
    {
-      switch(this._params.type)
+      switch (this._params.type)
       {
          case 'sockjs':
             /**
@@ -92,7 +92,7 @@ export default class Socket extends TyphonEvents
          let object;
 
          try { object = this._params.serializer.parse(message.data); }
-         catch(ignore) { return; /* ignore */ }
+         catch (ignore) { return; /* ignore */ }
 
          // If there is an attached socket intercept function then invoke it.
          if (this._socketIntercept)
